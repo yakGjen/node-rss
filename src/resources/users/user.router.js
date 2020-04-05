@@ -8,4 +8,29 @@ router.route('/').get(async (req, res) => {
   res.json(users.map(User.toResponse));
 });
 
+router.route('/:id').get(async (req, res) => {
+  const user = await usersService.getSingle(req.params.id);
+  res.json(User.toResponse(user));
+});
+
+router.route('/').post(async (req, res) => {
+  const newUser = req.body;
+  const message = await usersService.postNewUser(new User(newUser));
+  // res.json('User was created');
+  res.json(message);
+});
+
+router.route('/:id').put(async (req, res) => {
+  const id = req.params.id;
+  const modifiabledData = req.body;
+  const message = await usersService.changeUser(id, modifiabledData);
+  res.json(message);
+});
+
+router.route('/:id').delete(async (req, res) => {
+  const id = req.params.id;
+  const message = await usersService.deleteUser(id);
+  res.json(message);
+});
+
 module.exports = router;
