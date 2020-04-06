@@ -1,6 +1,6 @@
 const Task = require('./task.model');
 
-const tasks = [];
+let tasks = [];
 
 tasks.push(new Task());
 
@@ -49,10 +49,30 @@ const deleteTask = async id => {
   return 'Board was not successfully deleted.';
 };
 
+const deleteTasksByBoardId = async boardId => {
+  const newTasks = tasks.filter(task => {
+    if (task.boardId === boardId) {
+      return false;
+    }
+    return true;
+  });
+  tasks = newTasks;
+};
+
+const updateTasksDeletedUser = async userId => {
+  tasks.forEach(task => {
+    if (task.userId === userId) {
+      task.userId = null;
+    }
+  });
+};
+
 module.exports = {
   allTasks,
   getTasksByBoardId,
   postTask,
   changeTask,
-  deleteTask
+  deleteTask,
+  deleteTasksByBoardId,
+  updateTasksDeletedUser
 };

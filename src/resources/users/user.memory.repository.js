@@ -1,4 +1,5 @@
 const User = require('./user.model');
+const { updateTasksDeletedUser } = require('../tasks/task.memory');
 
 const users = [];
 
@@ -51,6 +52,7 @@ const changeUser = async (id, data) => {
 const deleteUser = async id => {
   const index = users.findIndex(item => item.id === id);
   if (index >= 0) {
+    await updateTasksDeletedUser(id);
     users.splice(index, 1);
     return 'User was successfully deleted.';
   }

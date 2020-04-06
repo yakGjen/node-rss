@@ -21,8 +21,8 @@ router
     res.json(message);
   })
   .delete(async (req, res) => {
-    const statycCode = await taskMemory.deleteTask(req.params.id);
-    res.json(statycCode);
+    const message = await taskMemory.deleteTask(req.params.id);
+    res.json(message);
   });
 
 router.route('/').post(async (req, res) => {

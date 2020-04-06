@@ -1,8 +1,9 @@
-const Board = require('./board.model');
+// const Board = require('./board.model');
+const { deleteTasksByBoardId } = require('../tasks/task.memory');
 
 const boards = [];
 
-boards.push(new Board());
+// boards.push(new Board());
 
 const getAll = async () => {
   return boards;
@@ -47,6 +48,7 @@ const deleteBoard = async id => {
   const index = boards.findIndex(item => item.id === id);
 
   if (index >= 0) {
+    await deleteTasksByBoardId(boards[index].id);
     boards.splice(index, 1);
     return 'Board was successfully deleted.';
   }
