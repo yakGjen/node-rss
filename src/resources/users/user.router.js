@@ -16,15 +16,18 @@ router.route('/:id').get(async (req, res) => {
 router.route('/').post(async (req, res) => {
   const newUser = req.body;
   const message = await usersService.postNewUser(new User(newUser));
-  // res.json('User was created');
-  res.json(message);
+  // await usersService.postNewUser(new User(newUser));
+  res.json(User.toResponse(message));
+  // res.json(message);
 });
 
 router.route('/:id').put(async (req, res) => {
   const id = req.params.id;
   const modifiabledData = req.body;
-  const message = await usersService.changeUser(id, modifiabledData);
-  res.json(message);
+  // const message = await usersService.changeUser(id, modifiabledData);
+  await usersService.changeUser(id, modifiabledData);
+  // res.json(message);
+  res.json();
 });
 
 router.route('/:id').delete(async (req, res) => {

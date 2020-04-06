@@ -15,18 +15,23 @@ const getSingle = async id => {
 };
 
 const postNewUser = async user => {
-  const isUser = users.some(item => {
+  /* const isUser = users.some(item => {
     if (item.login === user.login && item.password === user.password) {
       return true;
     }
     return false;
-  });
+  });*/
 
-  if (!isUser) {
+  users.push(user);
+  console.log('User was successfully created.');
+  return user;
+  /* if (!isUser) {
     users.push(user);
-    return 'User was created.';
+    console.log('User was successfully created.');
+    return user;
   }
-  return 'Such user exists.';
+  console.log('Such user exists.');
+  return {};*/
 };
 
 const changeUser = async (id, data) => {
