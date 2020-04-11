@@ -11,10 +11,12 @@ router
       res.status(200).json(users.map(User.toResponse));
     })
   )
-  .post(async (req, res) => {
-    const newUser = await usersService.postNewUser(new User(req.body));
-    res.status(200).json(User.toResponse(newUser));
-  });
+  .post(
+    catchErrors(async (req, res) => {
+      const newUser = await usersService.postNewUser(new User(req.body));
+      res.status(200).json(User.toResponse(newUser));
+    })
+  );
 
 router
   .route('/:id')
@@ -28,24 +30,28 @@ router
       }
     })
   )
-  .put(async (req, res) => {
-    const id = req.params.id;
-    const modifiabledData = req.body;
-    const user = await usersService.changeUser(id, modifiabledData);
-    if (user) {
-      res.status(200).json(user);
-    } else {
-      res.status(404).json('Not found.');
-    }
-  })
-  .delete(async (req, res) => {
-    const id = req.params.id;
-    const isDeleted = await usersService.deleteUser(id);
-    if (isDeleted) {
-      res.status(200).json();
-    } else {
-      res.status(404).json('Not found');
-    }
-  });
+  .put(
+    catchErrors(async (req, res) => {
+      const id = req.params.id;
+      const modifiabledData = req.body;
+      const user = await usersService.changeUser(id, modifiabledData);
+      if (user) {
+        res.status(200).json(user);
+      } else {
+        res.status(404).json('Not found.');
+      }
+    })
+  )
+  .delete(
+    catchErrors(async (req, res) => {
+      const id = req.params.id;
+      const isDeleted = await usersService.deleteUser(id);
+      if (isDeleted) {
+        res.status(200).json();
+      } else {
+        res.status(404).json('Not found');
+      }
+    })
+  );
 
 module.exports = router;

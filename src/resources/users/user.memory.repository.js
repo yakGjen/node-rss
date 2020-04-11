@@ -6,8 +6,8 @@ const users = [];
 users.push(new User());
 
 const getAll = async () => {
-  throw new Error();
-  // return users;
+  // throw new Error();
+  return users;
 };
 
 const getSingle = async id => {
