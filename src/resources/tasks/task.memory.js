@@ -18,6 +18,7 @@ const getTasksByBoardId = async id => {
   if (tasksById) {
     return tasksById;
   }
+  return false;
 };
 
 const postTask = async task => {
@@ -26,17 +27,17 @@ const postTask = async task => {
 };
 
 const changeTask = async (id, data) => {
-  let message = 'Task was not successfully updated.';
+  let resultTask = false;
   tasks.forEach(task => {
     if (task.id === id) {
       // eslint-disable-next-line guard-for-in
       for (const key in data) {
         task[key] = data[key];
       }
-      message = 'Task was successfully updated.';
+      resultTask = task;
     }
   });
-  return message;
+  return resultTask;
 };
 
 const deleteTask = async id => {
@@ -44,9 +45,9 @@ const deleteTask = async id => {
 
   if (index >= 0) {
     tasks.splice(index, 1);
-    return 'Board was successfully deleted.';
+    return true;
   }
-  return 'Board was not successfully deleted.';
+  return false;
 };
 
 const deleteTasksByBoardId = async boardId => {
