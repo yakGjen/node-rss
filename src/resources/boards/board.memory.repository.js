@@ -15,30 +15,18 @@ const getBoard = async id => {
 };
 
 const postBoard = async board => {
-  /* const isBoard = boards.some(item => {
-    if (item.id === board.id) {
-      return true;
-    }
-    return false;
-  });
-
-  if (!isBoard) {
-    boards.push(board);
-    return 'Board was created.';
-  }
-  return 'Board was not created.';*/
   boards.push(board);
   return board;
 };
 
 const changeBoard = async (id, data) => {
-  let message = 'Board was not successfully updated.';
+  let message = false;
   boards.forEach(item => {
     if (item.id === id) {
       item.title = data.title;
       item.columns = data.columns;
 
-      message = 'Board was successfully updated.';
+      message = item;
     }
   });
   return message;
@@ -50,9 +38,9 @@ const deleteBoard = async id => {
   if (index >= 0) {
     await deleteTasksByBoardId(boards[index].id);
     boards.splice(index, 1);
-    return 'Board was successfully deleted.';
+    return true;
   }
-  return 'Board was not successfully deleted.';
+  return false;
 };
 
 module.exports = {
