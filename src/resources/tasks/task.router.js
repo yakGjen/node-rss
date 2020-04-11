@@ -7,9 +7,11 @@ router.route('/').get((req, res) => {
 });
 
 router
-  .route('/:id')
+  .route('/:taskId')
   .get(async (req, res) => {
-    const tasksByBoardId = await taskMemory.getTasksByBoardId(req.params.id);
+    const tasksByBoardId = await taskMemory.getTasksByBoardId(
+      req.params.taskId
+    );
     if (!tasksByBoardId) {
       res.status(404).json();
     }
@@ -17,11 +19,14 @@ router
   })
   .put(async (req, res) => {
     const modifiableData = req.body;
-    const message = await taskMemory.changeTask(req.params.id, modifiableData);
+    const message = await taskMemory.changeTask(
+      req.params.taskId,
+      modifiableData
+    );
     res.json(message);
   })
   .delete(async (req, res) => {
-    const message = await taskMemory.deleteTask(req.params.id);
+    const message = await taskMemory.deleteTask(req.params.taskId);
     res.json(message);
   });
 

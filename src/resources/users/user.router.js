@@ -1,39 +1,51 @@
 const router = require('express').Router();
 const User = require('./user.model');
 const usersService = require('./user.service');
+const catchErrors = require('../../helpers/errorHelper');
 
-router.route('/').get(async (req, res) => {
-  const users = await usersService.getAll();
-  // map user fields to exclude secret fields like "password"
-  res.json(users.map(User.toResponse));
-});
+router
+  .route('/')
+  .get(
+    catchErrors(async (req, res) => {
+      const users = await usersService.getAll();
+      res.status(200).json(users.map(User.toResponse));
+    })
+  )
+  .post(async (req, res) => {
+    const newUser = await usersService.postNewUser(new User(req.body));
+    res.status(200).json(User.toResponse(newUser));
+  });
 
-router.route('/:id').get(async (req, res) => {
-  const user = await usersService.getSingle(req.params.id);
-  res.json(User.toResponse(user));
-});
-
-router.route('/').post(async (req, res) => {
-  const newUser = req.body;
-  const message = await usersService.postNewUser(new User(newUser));
-  // await usersService.postNewUser(new User(newUser));
-  res.json(User.toResponse(message));
-  // res.json(message);
-});
-
-router.route('/:id').put(async (req, res) => {
-  const id = req.params.id;
-  const modifiabledData = req.body;
-  // const message = await usersService.changeUser(id, modifiabledData);
-  await usersService.changeUser(id, modifiabledData);
-  // res.json(message);
-  res.json();
-});
-
-router.route('/:id').delete(async (req, res) => {
-  const id = req.params.id;
-  const message = await usersService.deleteUser(id);
-  res.json(message);
-});
+router
+  .route('/:id')
+  .get(
+    catchErrors(async (req, res) => {
+      const user = await usersService.getSingle(req.params.id);
+      if (user) {
+        res.json(User.toResponse(user));
+      } else {
+        res.status(404).json('Not found.');
+      }
+    })
+  )
+  .put(async (req, res) => {
+    const id = req.params.id;
+    const modifiabledData = req.body;
+    const user = await usersService.changeUser(id, modifiabledData);
+    if (user) {
+      res.status(200).json(user);
+    } else {
+      res.status(404).json('Not found.');
+    }
+  })
+  .delete(async (req, res) => {
+    const id = req.params.id;
+    const isDeleted = await usersService.deleteUser(id);
+    if (isDeleted) {
+      res.status(200).json();
+    } else {
+      res.status(404).json('Not found');
+    }
+  });
 
 module.exports = router;

@@ -6,8 +6,8 @@ const users = [];
 users.push(new User());
 
 const getAll = async () => {
-  // TODO: mock implementation. should be replaced during task development
-  return users;
+  throw new Error();
+  // return users;
 };
 
 const getSingle = async id => {
@@ -16,37 +16,22 @@ const getSingle = async id => {
 };
 
 const postNewUser = async user => {
-  /* const isUser = users.some(item => {
-    if (item.login === user.login && item.password === user.password) {
-      return true;
-    }
-    return false;
-  });*/
-
   users.push(user);
-  console.log('User was successfully created.');
   return user;
-  /* if (!isUser) {
-    users.push(user);
-    console.log('User was successfully created.');
-    return user;
-  }
-  console.log('Such user exists.');
-  return {};*/
 };
 
 const changeUser = async (id, data) => {
-  let message = 'User was not successfully updated.';
+  let result = false;
   users.forEach(item => {
     if (item.id === id) {
       item.name = data.name;
       item.login = data.login;
       item.password = data.password;
 
-      message = 'User was successfully updated.';
+      result = item;
     }
   });
-  return message;
+  return result;
 };
 
 const deleteUser = async id => {
@@ -54,9 +39,9 @@ const deleteUser = async id => {
   if (index >= 0) {
     await updateTasksDeletedUser(id);
     users.splice(index, 1);
-    return 'User was successfully deleted.';
+    return true;
   }
-  return 'User was not successfully deleted.';
+  return false;
 };
 
 module.exports = {

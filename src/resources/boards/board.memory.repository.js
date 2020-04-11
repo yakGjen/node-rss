@@ -1,9 +1,9 @@
-// const Board = require('./board.model');
+const Board = require('./board.model');
 const { deleteTasksByBoardId } = require('../tasks/task.memory');
 
 const boards = [];
 
-// boards.push(new Board());
+boards.push(new Board());
 
 const getAll = async () => {
   return boards;
