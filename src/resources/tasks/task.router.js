@@ -1,15 +1,16 @@
 const router = require('express').Router();
 const Task = require('./task.model');
-const taskMemory = require('./task.memory');
+// const taskMemory = require('./task.memory');
+const taskService = require('./task.service');
 
 router.route('/').get((req, res) => {
-  res.json(taskMemory.allTasks());
+  res.json(taskService.allTasks());
 });
 
 router
   .route('/:taskId')
   .get(async (req, res) => {
-    const tasksByBoardId = await taskMemory.getTasksByBoardId(
+    const tasksByBoardId = await taskService.getTasksByBoardId(
       req.params.taskId
     );
     if (!tasksByBoardId) {
@@ -19,21 +20,21 @@ router
   })
   .put(async (req, res) => {
     const modifiableData = req.body;
-    const message = await taskMemory.changeTask(
+    const message = await taskService.changeTask(
       req.params.taskId,
       modifiableData
     );
     res.json(message);
   })
   .delete(async (req, res) => {
-    const message = await taskMemory.deleteTask(req.params.taskId);
+    const message = await taskService.deleteTask(req.params.taskId);
     res.json(message);
   });
 
 router.route('/').post(async (req, res) => {
   const boardId = req.boardId;
   const newTask = req.body;
-  const message = await taskMemory.postTask(new Task(newTask, boardId));
+  const message = await taskService.postTask(new Task(newTask, boardId));
   res.json(message);
 });
 

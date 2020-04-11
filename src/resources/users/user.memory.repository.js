@@ -6,7 +6,6 @@ const users = [];
 users.push(new User());
 
 const getAll = async () => {
-  // throw new Error();
   return users;
 };
 
