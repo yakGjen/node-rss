@@ -1,3 +1,4 @@
+/* eslint-disable callback-return */
 const router = require('express').Router();
 const boardsService = require('./board.service');
 const Board = require('./board.model');
@@ -22,17 +23,17 @@ router
 router
   .route('/:id')
   .get(
-    catchErrors(async (req, res) => {
+    catchErrors(async (req, res, next) => {
       const board = await boardsService.getBoard(req.params.id);
       if (board) {
         res.status(200).json(board);
       } else {
-        res.status(404).json('Not found');
+        next(404);
       }
     })
   )
   .put(
-    catchErrors(async (req, res) => {
+    catchErrors(async (req, res, next) => {
       const modifiableData = req.body;
       const board = await boardsService.changeBoard(
         req.params.id,
@@ -41,17 +42,17 @@ router
       if (board) {
         res.status(200).json(board);
       } else {
-        res.status(404).json('Not found');
+        next(404);
       }
     })
   )
   .delete(
-    catchErrors(async (req, res) => {
+    catchErrors(async (req, res, next) => {
       const isDeleted = await boardsService.deleteBoard(req.params.id);
       if (isDeleted) {
         res.status(200).json();
       } else {
-        res.status(404).json('Not found');
+        next(404);
       }
     })
   );

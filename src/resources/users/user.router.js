@@ -21,35 +21,38 @@ router
 router
   .route('/:id')
   .get(
-    catchErrors(async (req, res) => {
+    catchErrors(async (req, res, next) => {
       const user = await usersService.getSingle(req.params.id);
       if (user) {
         res.json(User.toResponse(user));
       } else {
-        res.status(404).json('Not found.');
+        // eslint-disable-next-line callback-return
+        next(404);
       }
     })
   )
   .put(
-    catchErrors(async (req, res) => {
+    catchErrors(async (req, res, next) => {
       const id = req.params.id;
       const modifiabledData = req.body;
       const user = await usersService.changeUser(id, modifiabledData);
       if (user) {
         res.status(200).json(user);
       } else {
-        res.status(404).json('Not found.');
+        // eslint-disable-next-line callback-return
+        next(404);
       }
     })
   )
   .delete(
-    catchErrors(async (req, res) => {
+    catchErrors(async (req, res, next) => {
       const id = req.params.id;
       const isDeleted = await usersService.deleteUser(id);
       if (isDeleted) {
         res.status(200).json();
       } else {
-        res.status(404).json('Not found');
+        // eslint-disable-next-line callback-return
+        next(404);
       }
     })
   );

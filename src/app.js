@@ -48,14 +48,11 @@ app.use(
   },
   taskRouter
 );
-app.use('*', (req, res) => {
-  res.status(404).json('Not found.');
+app.use('*', (req, res, next) => {
+  next(404);
 });
 
-// eslint-disable-next-line handle-callback-err
 app.use((err, req, res, next) => {
-  console.log('next:', err);
-
   logger.error({
     url: req.url,
     params: req.params,
@@ -74,16 +71,20 @@ app.use((err, req, res, next) => {
   next();
 });
 
-process.on('uncaughtException', () => {
-  console.log('Smth an uncught error.');
-  // eslint-disable-next-line no-process-exit
-  process.exit(1);
+process.on('uncaughtException', err => {
+  logger.error({
+    errorType: 'uncaught exception',
+    error: err
+  });
+  const { exit } = process;
+  exit(1);
 });
 
-// eslint-disable-next-line handle-callback-err
 process.on('unhandledRejection', err => {
-  console.log('Smth an async error.');
-  console.log(err);
+  logger.error({
+    errorType: 'unhandled rejection',
+    error: err
+  });
 });
 
 module.exports = app;

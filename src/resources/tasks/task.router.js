@@ -1,3 +1,4 @@
+/* eslint-disable callback-return */
 const router = require('express').Router();
 const Task = require('./task.model');
 const taskService = require('./task.service');
@@ -22,19 +23,19 @@ router
 router
   .route('/:taskId')
   .get(
-    catchErrors(async (req, res) => {
+    catchErrors(async (req, res, next) => {
       const tasksByBoardId = await taskService.getTasksByBoardId(
         req.params.taskId
       );
       if (tasksByBoardId) {
         res.status(200).json(tasksByBoardId);
       } else {
-        res.status(404).json('Not found');
+        next(404);
       }
     })
   )
   .put(
-    catchErrors(async (req, res) => {
+    catchErrors(async (req, res, next) => {
       const modifiableData = req.body;
       const task = await taskService.changeTask(
         req.params.taskId,
@@ -43,17 +44,17 @@ router
       if (task) {
         res.status(200).json(task);
       } else {
-        res.status(404).json('Not found');
+        next(404);
       }
     })
   )
   .delete(
-    catchErrors(async (req, res) => {
+    catchErrors(async (req, res, next) => {
       const isDeleted = await taskService.deleteTask(req.params.taskId);
       if (isDeleted) {
         res.status(200).json();
       } else {
-        res.status(200).json('Not found');
+        next(404);
       }
     })
   );
