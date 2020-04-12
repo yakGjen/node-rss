@@ -7,7 +7,6 @@ const userRouter = require('./resources/users/user.router');
 const boardRouter = require('./resources/boards/board.router');
 const taskRouter = require('./resources/tasks/task.router');
 // const { finished } = require('stream');
-// const morgan = require('morgan');
 const logger = require('./common/logger');
 
 const app = express();
@@ -15,15 +14,11 @@ const swaggerDocument = YAML.load(path.join(__dirname, '../doc/api.yaml'));
 
 app.use(express.json());
 
-/* morgan.token('params', req => JSON.stringify(req.params));
-morgan.token('body', req => JSON.stringify(req.body));
-
-app.use(morgan('Url - :url Params - :params Body - :body'));*/
-
 app.use((req, res, next) => {
   logger.info({
     url: req.url,
     params: req.params,
+    query: req.query,
     body: req.body
   });
   next();
@@ -59,8 +54,23 @@ app.use('*', (req, res) => {
 
 // eslint-disable-next-line handle-callback-err
 app.use((err, req, res, next) => {
-  console.log('my err');
-  res.status(500).send('Internal Server Error');
+  console.log('next:', err);
+
+  logger.error({
+    url: req.url,
+    params: req.params,
+    query: req.query,
+    body: req.body
+  });
+
+  switch (err) {
+    case 404:
+      res.status(404).json('Not found');
+      break;
+    default:
+      res.status(500).send('Internal Server Error');
+  }
+
   next();
 });
 
