@@ -24,9 +24,11 @@ router
   .route('/:id')
   .get(
     catchErrors(async (req, res, next) => {
+      console.log('ROUTE ID', req.params.id);
+      console.log('ROUTE BODY', req.body);
       const board = await boardsService.getBoard(req.params.id);
       if (board) {
-        res.status(200).json(board);
+        res.status(200).json(Board.toResponse(board));
       } else {
         next(404);
       }
@@ -35,8 +37,12 @@ router
   .put(
     catchErrors(async (req, res, next) => {
       const modifiableData = req.body;
+      const { _id } = req.body;
+      // console.log('ROUTE ID', _id);
+      // console.log('ROUTE BODY', modifiableData);
       const board = await boardsService.changeBoard(
-        req.params.id,
+        // req.params.id,
+        _id,
         modifiableData
       );
       if (board) {
