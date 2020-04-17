@@ -1,52 +1,39 @@
 const Board = require('./board.model');
 /* const { deleteTasksByBoardId } = require('../tasks/task.memory');*/
 
-// const boards = [];
-
-// boards.push(new Board());
-
 const getAll = async () => {
-  // return boards;
-  return Board.find({});
+  const responseBoards = await Board.find({});
+  const resultBoards = responseBoards.map(board => Board.toResponse(board));
+  return resultBoards;
 };
 
 const getBoard = async id => {
-  // const board = boards.find(item => item.id === id);
-  // return board;
-  return Board.findById(id);
+  const responseBoard = await Board.findById(id);
+  const resultBoard = Board.toResponse(responseBoard);
+  return resultBoard;
 };
 
 const postBoard = async board => {
-  // boards.push(board);
-  // return board;
   return Board.create(board);
 };
 
 const changeBoard = async (id, data) => {
-  // let message = false;
-  // boards.forEach(item => {
-  //   if (item.id === id) {
-  //     item.title = data.title;
-  //     item.columns = data.columns;
-  //     message = item;
-  //   }
-  // });
-  // return message;
+  const responseData = (await Board.updateOne({ _id: id }, data)).ok;
+  const responseBoard = await Board.findOne({ _id: id });
+  const resultBoard = Board.toResponse(responseBoard);
 
-  // console.log('ID', id);
-  // console.log('DATA', data);
-  return Board.updateOne({ _id: id }, data);
+  if (responseData) {
+    return resultBoard;
+  }
+  return null;
 };
 
 const deleteBoard = async id => {
-  // const index = boards.findIndex(item => item.id === id);
-  // if (index >= 0) {
-  //   await deleteTasksByBoardId(boards[index].id);
-  //   boards.splice(index, 1);
-  //   return true;
-  // }
-  // return false;
-  return Board.deleteOne({ _id: id });
+  const resultData = (await Board.deleteOne({ _id: id })).ok;
+  if (resultData) {
+    return true;
+  }
+  return false;
 };
 
 module.exports = {
