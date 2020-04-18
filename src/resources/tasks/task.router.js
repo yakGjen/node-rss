@@ -9,13 +9,16 @@ router
   .get(
     catchErrors(async (req, res) => {
       const tasks = await taskService.allTasks();
-      res.status(200).json(tasks);
+      const result = tasks.map(task => Task.toResponse(task));
+      res.status(200).json(result);
     })
   )
   .post(
     catchErrors(async (req, res) => {
       const newTask = req.body;
-      const task = await taskService.postTask(new Task(newTask, req.boardId));
+      const task = await taskService.postTask(
+        Object.assign({}, newTask, { boardId: req.boardId })
+      );
       res.status(200).json(task);
     })
   );
