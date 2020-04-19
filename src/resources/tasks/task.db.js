@@ -18,17 +18,6 @@ const postTask = async task => {
 };
 
 const changeTask = async (id, data) => {
-  // let resultTask = false;
-  // tasks.forEach(task => {
-  //   if (task.id === id) {
-  //     // eslint-disable-next-line guard-for-in
-  //     for (const key in data) {
-  //       task[key] = data[key];
-  //     }
-  //     resultTask = task;
-  //   }
-  // });
-  // return resultTask;
   const isOk = (await Task.updateOne({ _id: id }, data)).ok;
   if (isOk) {
     const changedTask = await getTasksByBoardId(id);
@@ -57,11 +46,8 @@ const deleteTasksByBoardId = async boardId => {
 };
 
 const updateTasksDeletedUser = async userId => {
-  ['tasks'].forEach(task => {
-    if (task.userId === userId) {
-      task.userId = null;
-    }
-  });
+  const isOk = (await Task.updateMany({ userId }, { userId: null })).ok;
+  return isOk;
 };
 
 module.exports = {
