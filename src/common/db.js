@@ -1,13 +1,11 @@
 const mongoose = require('mongoose');
+const { DB_PATH } = require('./config');
 
 const connectToDb = cb => {
-  mongoose.connect(
-    'mongodb+srv://admin:yaks123@rest-node-avlbp.mongodb.net/rss-rest?retryWrites=true&w=majority',
-    {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
-    }
-  );
+  mongoose.connect(DB_PATH, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  });
 
   const db = mongoose.connection;
   db.on('error', console.error.bind(console, 'connection error:'));

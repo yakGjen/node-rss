@@ -76,8 +76,11 @@ process.on('uncaughtException', err => {
     errorType: 'uncaught exception',
     error: err
   });
-  const { exit } = process;
-  exit(1);
+
+  setTimeout(() => {
+    const { exit } = process;
+    exit(1);
+  }, 1000);
 });
 
 process.on('unhandledRejection', err => {
