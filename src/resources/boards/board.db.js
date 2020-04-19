@@ -1,5 +1,5 @@
 const Board = require('./board.model');
-/* const { deleteTasksByBoardId } = require('../tasks/task.memory');*/
+const { deleteTasksByBoardId } = require('../tasks/task.db');
 
 const getAll = async () => {
   const responseBoards = await Board.find({});
@@ -29,8 +29,9 @@ const changeBoard = async (id, data) => {
 };
 
 const deleteBoard = async id => {
-  const resultData = (await Board.deleteOne({ _id: id })).ok;
-  if (resultData) {
+  const isOk = (await Board.deleteOne({ _id: id })).ok;
+  if (isOk) {
+    await deleteTasksByBoardId(id);
     return true;
   }
   return false;

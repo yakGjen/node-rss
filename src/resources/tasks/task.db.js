@@ -35,14 +35,8 @@ const deleteTask = async id => {
 };
 
 const deleteTasksByBoardId = async boardId => {
-  const newTasks = ['tasks'].filter(task => {
-    if (task.boardId === boardId) {
-      return false;
-    }
-    return true;
-  });
-  // eslint-disable-next-line no-unused-vars
-  const tasks = newTasks;
+  const isOk = (await Task.deleteMany({ boardId })).ok;
+  return isOk;
 };
 
 const updateTasksDeletedUser = async userId => {
