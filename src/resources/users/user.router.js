@@ -13,7 +13,7 @@ router
   )
   .post(
     catchErrors(async (req, res) => {
-      const newUser = await usersService.postNewUser(new User(req.body));
+      const newUser = await usersService.postNewUser(req.body);
       res.status(200).json(User.toResponse(newUser));
     })
   );
