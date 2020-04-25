@@ -9,7 +9,8 @@ const getAll = async () => {
 
 const getSingle = async id => {
   const user = await User.findOne({ _id: id });
-  return User.toResponse(user);
+  // return User.toResponse(user);
+  return user;
 };
 
 const postNewUser = async user => {

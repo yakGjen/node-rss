@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { DB_PATH } = require('./config');
+const emitter = require('./emitters');
 
 const connectToDb = cb => {
   mongoose.connect(DB_PATH, {
@@ -14,6 +15,9 @@ const connectToDb = cb => {
   db.once('open', () => {
     console.log('Connection to a database was successfully created');
     db.dropDatabase();
+
+    emitter.emit('addUser');
+
     cb();
   });
 };
