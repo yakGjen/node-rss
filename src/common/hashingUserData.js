@@ -16,7 +16,6 @@ const checkUser = async user => {
   const hash = await hashUserPassword(password);
   const userFromDb = await getSingleByPassword(hash);
 
-  // return userFromDb;
   return User.toResponse(userFromDb);
 };
 

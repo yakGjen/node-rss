@@ -9,14 +9,10 @@ const createToken = ({ id, login }) => {
 };
 
 const checkToken = (req, res, next) => {
-  console.log('HEADERS', req.headers);
   const authHeader = req.headers.authorization;
 
   if (authHeader) {
-    console.log('OK OK');
-
     const token = authHeader.split(' ')[1];
-    console.log('HEA', token);
 
     jwt.verify(token, JWT_SECRET_KEY, err => {
       if (err) {

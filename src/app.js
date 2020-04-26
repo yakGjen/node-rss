@@ -64,8 +64,6 @@ app.use((err, req, res, next) => {
     body: req.body
   });
 
-  console.log(err);
-
   switch (err) {
     case 401:
       res.status(401).json('Unauthorized error');

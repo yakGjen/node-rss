@@ -7,9 +7,9 @@ const logger = createLogger({
     format.prettyPrint()
   ),
   transports: [
-    /* new transports.Console({
+    new transports.Console({
       level: 'info'
-    }),*/
+    }),
     new transports.File({
       level: 'error',
       filename: path.join(__dirname, '../logs/error.log')
