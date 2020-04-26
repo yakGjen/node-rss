@@ -13,6 +13,11 @@ const getSingle = async id => {
   return user;
 };
 
+const getSingleByPassword = async password => {
+  const result = await User.findOne({ password });
+  return result;
+};
+
 const postNewUser = async user => {
   return User.create(user);
 };
@@ -37,6 +42,7 @@ const deleteUser = async id => {
 module.exports = {
   getAll,
   getSingle,
+  getSingleByPassword,
   postNewUser,
   changeUser,
   deleteUser

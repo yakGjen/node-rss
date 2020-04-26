@@ -1,9 +1,10 @@
-const bcrypt = require('bcrypt');
+// const bcrypt = require('bcrypt');
 const usersRepo = require('./user.db');
 const emitter = require('../../common/emitters');
 const User = require('./user.model');
 
-const saltRounds = 10;
+const { hashUserPassword } = require('../../common/hashingUserData');
+// const saltRounds = 10;
 
 const getAll = () => usersRepo.getAll();
 
@@ -11,8 +12,7 @@ const getSingle = id => usersRepo.getSingle(id);
 
 const postNewUser = async user => {
   const { password } = user;
-  const salt = await bcrypt.genSalt(saltRounds);
-  const hash = await bcrypt.hash(password, salt);
+  const hash = await hashUserPassword(password);
 
   const transformedUser = Object.assign({}, user, { password: hash });
 
@@ -21,12 +21,10 @@ const postNewUser = async user => {
 
 const changeUser = async (id, data) => {
   const { password } = data;
+  const hash = await hashUserPassword(password);
+  const transformedUser = Object.assign({}, data, { password: hash });
 
-  const salt = await bcrypt.genSalt(saltRounds);
-  const hash = await bcrypt.hash(password, salt);
-  const updatedUser = Object.assign({}, data, { password: hash });
-
-  return usersRepo.changeUser(id, updatedUser);
+  return usersRepo.changeUser(id, transformedUser);
 };
 
 const deleteUser = id => usersRepo.deleteUser(id);

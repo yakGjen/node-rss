@@ -6,8 +6,10 @@ const YAML = require('yamljs');
 const userRouter = require('./resources/users/user.router');
 const boardRouter = require('./resources/boards/board.router');
 const taskRouter = require('./resources/tasks/task.router');
+const loginRouter = require('./resources/login.service/login.router');
 // const { finished } = require('stream');
 const logger = require('./common/logger');
+const { checkToken } = require('./common/jwt');
 
 const app = express();
 const swaggerDocument = YAML.load(path.join(__dirname, '../doc/api.yaml'));
@@ -38,10 +40,12 @@ app.use('/', (req, res, next) => {
   });*/
 });
 
-app.use('/users', userRouter);
-app.use('/boards', boardRouter);
+app.use('/login', loginRouter);
+app.use('/users', checkToken, userRouter);
+app.use('/boards', checkToken, boardRouter);
 app.use(
   '/boards/:id/tasks',
+  checkToken,
   (req, res, next) => {
     req.boardId = req.params.id;
     next();
@@ -60,7 +64,15 @@ app.use((err, req, res, next) => {
     body: req.body
   });
 
+  console.log(err);
+
   switch (err) {
+    case 401:
+      res.status(401).json('Unauthorized error');
+      break;
+    case 403:
+      res.status(403).json('Forbidden');
+      break;
     case 404:
       res.status(404).json('Not found');
       break;
